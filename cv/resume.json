@@ -1,0 +1,141 @@
+{
+  "selectedTemplate": 2,
+  "headings": {
+    "skills": "Habilidades",
+    "projects": "Projetos",
+    "awards": "Premiações",
+    "work": "Experiência"
+  },
+  "basics": {
+    "email": "ieremies@gmail.com",
+    "phone": "(85) 99214-4733",
+    "website": "",
+    "location": {
+      "address": "Campinas, SP"
+    },
+    "name": "Ieremies Romero"
+  },
+  "education": [
+    {
+      "institution": "Universidade Estadual de Campinas, UNICAMP",
+      "location": "Campinas, SP",
+      "area": "Ciência da Computação",
+      "studyType": "Bacharelado",
+      "startDate": "Fev, 2018",
+      "endDate": ""
+    },
+    {
+      "institution": "Instituto Brasil Estados Unidos, IBEU-CE",
+      "location": "Fortaleza, CE",
+      "area": "Inglês avançado",
+      "startDate": "Jan, 2014",
+      "endDate": "Ago, 2016"
+    }
+  ],
+  "work": [
+    {
+      "company": "Projeto Além da Escola",
+      "location": "Campinas, SP",
+      "position": "Professor e Coordenador Voluntário",
+      "website": "",
+      "startDate": "Mar, 2018",
+      "endDate": "Abr, 2019",
+      "highlights": [
+        "Aulas de programação para OBI",
+        "Aulas de matemática para vestibulinho do Cotuca/Etec",
+        "Coordenador do pré-vestibulinho para escolas técnicas"
+      ]
+    },
+    {
+      "highlights": [
+        "Seis vezes bolsista monitor de disciplinas iniciais da graduação.",
+        "Tira-dúvidas, monitorias e auxilio na confecção de laboratórios práticos."
+      ],
+      "company": "Universidade Estadual de Campinas",
+      "position": "Monitor da graduação",
+      "location": "Campinas, SP",
+      "startDate": "Ago, 2018",
+      "endDate": "Presente"
+    },
+    {
+      "highlights": [
+        "Desenvolvimento em python",
+        "Metodologias ágeis e arquitetura de sistemas clean."
+      ],
+      "company": "SF-Labs, Vizio",
+      "position": "Estagiário em Engenharia de Software",
+      "location": "Campinas, SP",
+      "startDate": "Mar, 2022",
+      "endDate": "Abr, 2022"
+    },
+    {
+      "highlights": [
+        "Ministrar aulas do intinerário de programação para o ensino médio.",
+        "Elaboração do currículo do intinerário para todos os anos.",
+        "Elaboração, correção e acompanhamento das atividades avaliativas."
+      ],
+      "company": "Pré-vestibular e Colégio Elite",
+      "position": "Professor de Programação",
+      "startDate": "Jan 2022",
+      "endDate": "Present"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Linguagens de Programação",
+      "level": "",
+      "keywords": [
+        "Python",
+        "C/C++"
+      ]
+    },
+    {
+      "keywords": [
+        "Conversação fluente",
+        "Escrita fluente",
+        "Leitura fluente"
+      ],
+      "name": "Inglesa"
+    }
+  ],
+  "projects": [
+    {
+      "description": "Workshop ministrado para alunos de Engenharia Química sobre o uso de python para experimentos e processamento de dados.",
+      "url": "",
+      "keywords": [
+        "python"
+      ],
+      "name": "Workshop de Python"
+    },
+    {
+      "keywords": [
+        "git"
+      ],
+      "name": "Workshop de Git",
+      "description": "Workshop ministrado para alunos da Computação sobre a ferramenta Git e suas utilidades para o curso."
+    },
+    {
+      "keywords": [
+        ""
+      ],
+      "name": "UNICAMP de Portas Abertas",
+      "description": "Coordenador do evento no Instituto de Computação em 2022."
+    }
+  ],
+  "awards": [
+    {
+      "title": "Medalha de prata ",
+      "date": "Jun, 2015",
+      "awarder": "Olimpíada Brasileira de Informática"
+    }
+  ],
+  "sections": [
+    "templates",
+    "profile",
+    "education",
+    "work",
+    "skills",
+    "projects",
+    "awards"
+  ]
+}
