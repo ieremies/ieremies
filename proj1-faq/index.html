@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">FAQ - Projeto 1: Senha
+<br />
+<span class="subtitle">MC102 - Turma W</span>
+</h1>
+<p>
+A ideia desse documento é tirar algumas dúvidas gerais vemos os alunos tendo e/ou problemas que são comuns.
+</p>
+
+<div id="outline-container-org8f30c2b" class="outline-2">
+<h2 id="org8f30c2b"><span class="section-number-2">1.</span> Dicas em geral</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Primeiro defina a estratégia, depois code</b>. A maior parte do tempo não estamos escrevendo código, e sim pensando e tentando entender o que precisamos resolver e como resolveremos. Assim, tenha <b>escrito</b> as suas estratégias antes de pensar em codar. Jogue o joguinho e pense <i>&ldquo;nesse caso, qual seria a melhor estratégia aqui?&rdquo;</i> ou <i>&ldquo;se a resposta for (x, y), o que eu poderia fazer?&rdquo;</i>. Se você não tiver isso definido antes de codar, seu código nunca vai sair do lugar. <b>Escreva no papel!</b>
+</p>
+
+<p>
+<b>Evite utilizar variáveis globais</b>. Variáveis globais são aquelas que vivem fora de todas as funções, como a lista colors que coloquei. Estas variáveis irão viver entre diferentes chamadas da sua função player, inclusive entre os jogos em si. Caso ainda sim você queira muito, lembre-se de &ldquo;resetá-las&rdquo; ao valor padrão quando o jogo recomeça, utilizando algo como:
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #673AB7;">def</span> <span style="color: #37474F; font-weight: bold;">player</span>(guess_hist, res_hist):
+    <span style="color: #673AB7;">global</span> variavel_global  <span style="color: #90A4AE; font-style: italic;"># Indica se refere &#224; vari&#225;vel global</span>
+    <span style="color: #673AB7;">if</span> <span style="color: #673AB7; font-weight: bold;">len</span>(guess_hist) <span style="color: #673AB7;">==</span> <span style="color: #29B6F6;">0</span>:
+    <span style="color: #f48df65bf790;"> </span>   lista_global <span style="color: #673AB7;">=</span> []
+    <span style="color: #f48df65bf790;"> </span>   variavel_global <span style="color: #673AB7;">=</span> <span style="color: #29B6F6;">0</span>
+</pre>
+</div>
+<p>
+Observe que foi necessário dizer que a <code>variavel_global</code> a ser utilizada na função era, de fato, a global. Caso contrário, o python cria uma cópia dela que vive apenas dentro desta chamada. Isso não ocorre para listas, umas vez que elas são objetos mutáveis.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgba5742a" class="outline-2">
+<h2 id="orgba5742a"><span class="section-number-2">2.</span> Dúvidas comuns</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Como eu jogo o jogo sem rodar a minha função?</b>
+Utilize o comando <code>python3 src/main.py -t -i</code> e colocar as letras iniciais das cores que você quer chutar. Perceba que cores como verde e vermelho precisam de no mínimo 4 letras para se diferenciarem.&rsquo;
+</p>
+
+<p>
+<b>Como eu rodo o jogo uma vez utilizando a minha função para resolver?</b>
+O mesmo comando acima, mas sem o <code>-i</code> ao final
+</p>
+
+<p>
+<b>Como eu testo o meu código 10.000 vezes?</b>
+Utilize o comando <code>python3 src/tournament.py</code>.
+</p>
+
+<p>
+<b>Estou tendo o erro &ldquo;can&rsquo;t open file &lsquo;src/tournament.py&rsquo;: [Errno 2] No such file or directory&rdquo;.</b>
+Provavelmente você está tentando rodar os comandos acima já dentro da pasta <code>src</code>. Tente os comandos acima, mas sem a parte do <code>src/</code>
+</p>
+
+<p>
+<b>Estou tendo o erro &ldquo;ModuleNotFoundError: No module named &lsquo;pygame&rsquo;&rdquo;</b>
+Isso acontece quando você está tentando utilizar o modo visual. Ou você instala a biblioteca <code>pygame</code> pelo comando <code>pip3 install pygame</code> ou não utiliza-a passando sempre a flag <code>-t</code> quando invocar o <code>main.py</code> para jogar no terminal. O <code>tournament.py</code>, por padrão, já não usa o modo visual.
+</p>
+
+<p>
+<b>Estou tendo o erro &ldquo;match &#x2026; SyntaxError: invalid syntax&rdquo;.</b>
+A sintaxe que utilizei só está disponível no python 3.10 ou superior. Confira a versão do seu python rodando, num terminal, o comando <code>python3 --version</code>. Caso a versão seja inferior a 3.10, procure como atualizar o seu sistema. No Linux, isso irá depender da sua distribuição, a melhor forma de descobrir é dar um google <code>update python linux SUA_DISTRO</code> ou perguntar a um monitor. Caso esteja no Windows, vá para o Linux.&rsquo;
+</p>
+
+<p>
+<b>O que são os parâmetros da função player?</b>
+Os parâmetros <code>guess_hist</code> e <code>res_hist</code> <b>já são listas</b>. O primeiro, é uma lista de palpites. Um palpite é uma lista de 4 cores. Ou seja, <code>guess_hist[-1]</code> é o último palpite e <code>guess_hist[1][2]</code> é a terceira cor do segundo palpite. Já <code>res_hist</code> é uma lista de <i>tuplas</i>, cada uma contendo dois valores: a quantidade de cores corretas e a quantidade de cores na posição correta. Tuplas são listas especiais em python, mas para todos os efeitos deste projeto podem ser tratadas como listas normais. Ou seja, <code>res_hist[-1][0]</code> é a quantidade de cores corretas do último palpite e <code>res_hist[2][1]</code> é a quantidade de cores na posição correta do terceiro palpite.
+</p>
+
+<p>
+<b>Como pegar o resultado de um palpite?</b>
+Você tem duas opções: ou faz um contador para saber o índice do palpite:
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #673AB7;">for</span> i <span style="color: #673AB7;">in</span> <span style="color: #673AB7; font-weight: bold;">range</span>(<span style="color: #673AB7; font-weight: bold;">len</span>(guess_hist):
+</pre>
+</div>
+<p>
+ou você pode &ldquo;juntar&rdquo; as duas listas usando a função do python chamada <code>zip()</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #673AB7;">for</span> guess, ress <span style="color: #673AB7;">in</span> <span style="color: #673AB7; font-weight: bold;">zip</span>(guess_hist, res_hist):
+</pre>
+</div>
+
+<p>
+Neste último caso, ele junta as duas listas de forma que a variável <code>res</code> é o resultado do palpite <code>guess</code> e isso é feito na ordem do chute.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Ieremies Vieira da Fonseca Romero</p>
+<p class="date">Created: 2024-04-27 Sat 12:24</p>
+</div>
+</body>
+</html>
