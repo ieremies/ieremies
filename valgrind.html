@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR" xml:lang="pt_BR">
+<head>
+<!-- 2025-08-15 Fri 20:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Valgrind</title>
+<meta name="author" content="Ieremies Romero" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Valgrind</h1>
+<p>
+Um breve tutorial sobre a ferramenta <b>valgrind</b>.
+Falaremos sobre como <a href="#orgd198a5b">instalar</a>, quais os <a href="#orga158fd4">erros</a> mais comuns e como resolvê-los e algumas <a href="#org3520f8b">dúvidas frequentes e dicas</a>.
+</p>
+<div id="outline-container-org781840f" class="outline-2">
+<h2 id="org781840f"><span class="section-number-2">1.</span> Instalação e uso <a id="orgd198a5b"></a></h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Antes de mais nada, você já sabe, mas não custa lembrar: <b><a href="./windows.html">não use Windows</a></b>.
+</p>
+
+<p>
+Dito isso, instalar valgrind no Linux é fácil: utilizando o seu gerenciador de pacote favorito (<code>apt</code>, <code>pacman</code>, <code>yum</code>, <code>dnf</code>, <code>snap</code>&#x2026;) instale o pacote <code>valgrind</code>.
+No Ubuntu (ou qualquer distribuição baseada no Debian):
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #673AB7;">sudo</span> apt install valgrind
+</pre>
+</div>
+
+<p>
+<b>Para aqueles no MacOS</b>: o valgrind não funciona para computadores com processadores ARM.
+Para isso, minha sugestão é utilizar a máquina do IC via ssh e testar o seu código nela.
+Existe uma ferramenta chamada <code>leaks</code> que faz algo similar ao valgrind e é nativo do MacOS, mas não irei garantir nada em relação a ela.
+Também é possível utilizar <code>docker</code> para rodar uma máquina <code>x86</code>, mas nunca consegui fazer isso funcionar.
+</p>
+
+<p>
+Se tudo ocorrer bem, você deve ter agora um novo comando:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">valgrind --version
+</pre>
+</div>
+
+<p>
+Em geral, para testar o seu programa, você fará:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">valgrind --leak-check=full ./programa &lt; entrada.in
+</pre>
+</div>
+
+<p>
+Perceba que não iremos passar o arquivo fonte (<code>.c</code>), e sim o binário compilado (<code>programa</code>).
+A flag <code>--leak-check=full</code> será explicada mais para frente.
+</p>
+</div>
+<div id="outline-container-orgeedb487" class="outline-3">
+<h3 id="orgeedb487"><span class="section-number-3">1.1.</span> color-valgrind (<i>opcional</i>)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+O valgrind é um programa bem verboso, imprime muitas informações.
+Para ficar mais fácil de ler, eu recomendo (também) o projeto <a href="https://github.com/StarlitGhost/colour-valgrind">StarlitGhost/colour-valgrind</a>.
+Após instalar utilizando o gerenciador de pacotes do python (<code>pip install colour-valgrind</code>), basta você substituir o <code>valgrind</code> por <code>colour-valgrind</code> e verá um mundo com cores.
+Este projeto já não vê manutenção à 3 anos, logo pode ser que um dia quebre. Por enquanto, parece funcionar ok.
+</p>
+
+
+<div id="orge608e4a" class="figure">
+<p><img src="../colour.png" alt="colour.png" width="700px" />
+</p>
+<p><span class="figure-number">Figura 1: </span>E então ele disse "que haja cor".</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3c35589" class="outline-2">
+<h2 id="org3c35589"><span class="section-number-2">2.</span> Erros comuns <a id="orga158fd4"></a></h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Aqui vão breves descrições e exemplos para os erros mais comuns.
+Use esta página como um "dicionário": tomou o erro, não sabe o que fazer? Volte aqui para conferir as dicas.
+Alguns dos erros podem não fazer sentido agora, mas te garanto que já já você irá encontrar com eles na natureza.
+</p>
+</div>
+<div id="outline-container-org6e5bfa0" class="outline-3">
+<h3 id="org6e5bfa0"><span class="section-number-3">2.1.</span> Invalid read, invalid write</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Este erro acontece quando o seu programa tenta ler ou escrever onde não deveria.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdio.h"</span>
+<span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdlib.h"</span>
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">int</span> *v = malloc(3 * <span style="color: #673AB7;">sizeof</span>(<span style="color: #673AB7;">int</span>));
+    <span style="color: #673AB7;">for</span>(<span style="color: #673AB7;">int</span> i = 0; i &lt;= 3; i++)
+        v[i] = i * 2;
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Invalid write of size 4
+   at 0x109185: main (a.c:5)
+ Address 0x4a9b04c is 0 bytes after a block of size 12 alloc'd
+   at 0x4848899: malloc (in ...)
+   by 0x10915E: main (a.c:3)
+</pre>
+</div>
+
+<br>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7;">struct</span> <span style="color: #673AB7;">registro</span>{
+    <span style="color: #673AB7;">int</span> n;
+};
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">struct</span> <span style="color: #673AB7;">registro</span> *r;
+    r-&gt;n = 10;
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Invalid write of size 4
+   at 0x109135: main (a.c:6)
+ Address 0x0 is not stack'd, malloc'd or (recently) free'd
+</pre>
+</div>
+
+<br>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdio.h"</span>
+<span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdlib.h"</span>
+<span style="color: #673AB7;">struct</span> <span style="color: #673AB7;">registro</span> {
+    <span style="color: #673AB7;">int</span> n;
+};
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">struct</span> <span style="color: #673AB7;">registro</span> *r = malloc(<span style="color: #673AB7;">sizeof</span>(<span style="color: #673AB7;">struct</span> <span style="color: #673AB7;">registro</span>));
+    free(r);
+    <span style="color: #673AB7;">return</span> r-&gt;n;
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Invalid read of size 4
+   at 0x109193: main (a.c:8)
+ Address 0x4a9b040 is 0 bytes inside a block of size 4 free'd
+   at 0x484B27F: free (in ...)
+   by 0x10918E: main (a.c:7)
+ Block was alloc'd at
+   at 0x4848899: malloc (in ...)
+   by 0x10917E: main (a.c:6)
+</pre>
+</div>
+
+<p>
+Laços com os limites errados, ponteiros não alocados ou já liberados costumam ser os culpados.
+Caso queira, adicionar a flag <code>--read-var-info=yes</code> ao valgrind pode te dar melhores direções.
+</p>
+</div>
+</div>
+<div id="outline-container-org0aaa6b9" class="outline-3">
+<h3 id="org0aaa6b9"><span class="section-number-3">2.2.</span> Uninitialised value</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Este erro costuma aparecer de duas formas <code>conditional jump or move depends on uninitialised values(s)</code> ou <code>use of unintialised value</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdio.h"</span>
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">int</span> n;
+    <span style="color: #673AB7;">for</span>(<span style="color: #673AB7;">int</span> i = 0; i &lt; n; i++)
+        printf(<span style="color: #29B6F6;">"%d"</span>, n);
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Conditional jump or move depends on uninitialised value(s)
+   at 0x109181: main (a.c:4)
+</pre>
+</div>
+
+<br>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdio.h"</span>
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">int</span> n;
+    <span style="color: #673AB7;">int</span> m = n + 1;
+    printf(<span style="color: #29B6F6;">"%d"</span>, m);
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Use of uninitialised value of size 8
+   at 0x48C92EB: _itoa_word (_itoa.c:177)
+   by 0x48E4ABD: __vfprintf_internal (vfprintf-internal.c:151)
+   by 0x48CF79E: printf (printf.c:33)
+   by 0x109176: main (a.c:6)
+</pre>
+</div>
+
+<p>
+Esse costuma ser o principal responsável pelo temido <b>"na minha máquina funciona"</b>.
+Nossos computadores pessoais são reinicializados com frequência, o que faz com que a maior parte do lixo de memória esteja zerado.
+Já os servidores — ou as "máquinas de produção" — costumam permanecer ligados por longos períodos, acumulando lixos de memória ao longo de várias execuções.
+No fim das contas, seu programa passa a depender do horóscopo do dia: se Vênus estiver alinhado com Marte, ele roda direito; caso contrário…
+</p>
+
+<p>
+Caso queira, adicionar a flag <code>--track-origins=yes</code> ao valgrind fará com que ele tente descobrir quem foi o causador do erro.
+</p>
+</div>
+</div>
+<div id="outline-container-org8ddfb0d" class="outline-3">
+<h3 id="org8ddfb0d"><span class="section-number-3">2.3.</span> Invalid free</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Existem duas formas de tomar esse erro: ou você está liberando uma variável que não é dinamicamente alocada (memória no <i>heap</i>) ou você está liberando a memória duas vezes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdlib.h"</span>
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">int</span> v[10];
+    free(v);
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Invalid free() / delete / delete[] / realloc()
+   at 0x484B27F: free (in ...)
+   by 0x10918F: main (a.c:4)
+ Location 0x1fff0005a0 is 0 bytes inside v[0],
+ declared at a.c:3, in frame #1 of thread 1
+</pre>
+</div>
+
+<br>
+
+<div class="org-src-container">
+<pre class="src src-c"><span style="color: #673AB7; font-weight: bold;">#include</span> <span style="color: #29B6F6;">"stdlib.h"</span>
+<span style="color: #673AB7;">int</span> <span style="color: #37474F; font-weight: bold;">main</span>() {
+    <span style="color: #673AB7;">char</span> *s = malloc(10 * <span style="color: #673AB7;">sizeof</span>(<span style="color: #673AB7;">char</span>));
+    free(s);
+    <span style="color: #90A4AE; font-style: italic;">// </span><span style="color: #90A4AE; font-style: italic;">blah blah blah ...</span>
+    free(s);
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">Invalid free() / delete / delete[] / realloc()
+   at 0x484B27F: free (in ...)
+   by 0x10919A: main (a.c:6)
+ Address 0x4a9b040 is 0 bytes inside a block of size 10 free'd
+   at 0x484B27F: free (in ...)
+   by 0x10918E: main (a.c:4)
+ Block was alloc'd at
+   at 0x4848899: malloc (in ...)
+   by 0x10917E: main (a.c:3)
+</pre>
+</div>
+
+<p>
+Em geral, resolver esse problema é remover um <code>free()</code>.
+A questão é que, muitas vezes, estamos iterando ou percorrendo uma lista de ponteiros e não nos atentamos se já liberamos a memória ou não.
+Por isso, é boa prática, após liberar a memória de um ponteiro, defini-lo como <code>NULL</code>.
+Assim, toda vez que você for liberar um endereço de memória, você pode conferir se ele já não é <code>NULL</code>.
+Se for, significa que você já liberou e não precisa fazer mais nada.
+</p>
+
+<p>
+Lembre-se que <code>NULL</code> (zero) é um endereço especial onde nada pode ter sido alocado ali.
+Logo, ponteiros que apontam para <code>NULL</code> são, necessariamente, inválidos.
+</p>
+</div>
+</div>
+<div id="outline-container-org39e117a" class="outline-3">
+<h3 id="org39e117a"><span class="section-number-3">2.4.</span> Memory leak</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Os famosos, vazamentos de memória: quando não liberamos a memória ao final do programa.
+O valgrind irá emitir um relatório de vazamentos, como este:
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">LEAK SUMMARY:
+   definitely lost: 48 bytes in 3 blocks.
+   indirectly lost: 32 bytes in 2 blocks.
+     possibly lost: 96 bytes in 6 blocks.
+   still reachable: 64 bytes in 4 blocks.
+        suppressed: 0 bytes in 0 blocks.
+</pre>
+</div>
+
+<p>
+Vamos entender o que cada parte disso significa.
+Para cada tipo de vazamento, ele vai indicar o tamanho e a quantidade de blocos.
+Um bloco é alocado a cada chamada do <code>malloc</code>.
+Muitas vezes, isso te ajuda a perceber quem são as variáveis que estão vazando.
+</p>
+
+<p>
+Os tipos de vazamento são:
+</p>
+<ul class="org-ul">
+<li><code>definitely lost</code> : significa que, em algum momento, você perdeu o ponteiro para aquele bloco, seja porque sobrescreveu o valor dele ou porque ele ficou pra trás em alguma chamada de função. Lembre-se de liberar o endereço de memória toda vez que for apagá-lo ou deixá-lo pra trás.</li>
+<li><code>indirectly lost</code> : digamos que você tem uma <code>struct</code> que dentro dela há um ponteiro. Se você perder o ponteiro para sua <code>struct</code>, você indiretamente perde o ponteiro que estava dentro dela e, consequentemente, perde indiretamente o endereço de memória que este cara apontava. Confira se você está liberando os ponteiros dentro de registros antes de liberá-los.</li>
+<li><code>possibly lost</code> : esse é o mais complicado: se você possui um vetor (dinamicamente alocado) e você move esse ponteiro para o interior do vetor. No nosso caso, a causa mais comum são strings da biblioteca <code>string.h</code>.</li>
+<li><code>still reachable</code> : significa que você deixou de liberar alguns blocos, mas você ainda possui o endereço deles (ao final da execução do programa).</li>
+</ul>
+
+<p>
+Para que o valgrind fale tudo que ele sabe sobre esses vazamentos, é necessário rodá-lo com a flag <code>--leack-check=full</code>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org8eae6b6" class="outline-2">
+<h2 id="org8eae6b6"><span class="section-number-2">3.</span> Perguntas comuns e dicas <a id="org3520f8b"></a></h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgbd2dab9" class="outline-3">
+<h3 id="orgbd2dab9"><span class="section-number-3">3.1.</span> Ignore tudo menos o primeiro erro</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Pela natureza dos erros que o valgrind busca, é comum a lista de erros ser gigante, muitas vezes contendo milhares de entradas.
+Isso não significa que seu código possui milhares de erros: por exemplo, um código com um pequeno erro dentro de um laço que se repete 1000 vezes, terá 1000 erros do valgrind, por mais que você só precise corrigir uma linha.
+</p>
+
+<p>
+Além disso, é muito comum que um erro de memória leve a outro erro de memória, um efeito de cascata. Por isso, quando tiver com problemas no valgrind, <b>foque em resolver apenas o primeiro dos erros</b> e repita o processo até que tudo esteja resolvido. Em hipótese alguma se importe com a "quantidade" de erros que o valgrind diz que existe. Ele só sabe fazer drama!
+</p>
+</div>
+</div>
+<div id="outline-container-org8c84aa8" class="outline-3">
+<h3 id="org8c84aa8"><span class="section-number-3">3.2.</span> Mas nunca ignore se houver erro</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+<i>Ah, tudo roda normal, mas o valgrind reclama de erro, vou só ignorar&#x2026;</i> <b>NÃO!</b>
+</p>
+
+<p>
+Sabe o que é pior do que um código errado? Um código com comportamento indefinido!
+Quando o valgrind te diz que tem algo errado, mesmo que o seu <i>output</i> não esteja errado, existe a chance de seu programa se comportar de forma estranha quando rodar em outra máquina ou até mesmo na sua mais tarde.
+Você vai realmente querer publicar um site ou aplicativo que tem chance de quebrar na máquina do cliente??? Foi o que pensei.
+</p>
+
+<p>
+Assim, sempre resolva <b>todos</b> os erros do valgrind, por mais que isso não mude o <i>output</i> do programa.
+Isso sempre resolve os problemas de "ah, mas roda na minha máquina" e é por isso que, nesta disciplina, <b>código com erro no valgrind é código errado</b>.
+</p>
+</div>
+</div>
+<div id="outline-container-org369a8b7" class="outline-3">
+<h3 id="org369a8b7"><span class="section-number-3">3.3.</span> Procure o ponto da pilha que o seu programa aparece</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+Conforme nossos programas começam a utilizar bibliotecas padrões, uma simples chamada de função no nosso código pode gerar diversas chamadas no código da biblioteca.
+Assim, quando o valgrind vai reportar a pilha de execução das funções, vai aparecer muita função que não é sua, com nome estranho e símbolos esquisitos.
+Tudo bem, fica calma e respira. Vai dar tudo certo!
+</p>
+
+<p>
+Procure pela primeira linha (de cima para baixo) que indica um código seu.
+No exemplo abaixo, as duas primeiras linhas da pilha indicam o arquivo <code>basic_string.h</code>, que não fomos nós que escrevemos.
+As seguintes linhas apontam para o nosso <code>a.c</code>, as funções <code>h</code>, <code>g</code>, <code>f</code> e <code>main</code> e as respectivas linhas que cada chamada ocorreu.
+Chances são que o seu erro estará na função <code>h</code>, antes da linha <code>6</code>.
+</p>
+<div class="org-src-container">
+<pre class="src src-nil">Invalid read of size 8
+   at 0x4F7B905: assign (basic_string.h:1439)
+   by 0x4F7B905: [...] (basic_string.h:705)
+   by 0x108A3D: h() (a.c:6)
+   by 0x108A8A: g() (a.c:9)
+   by 0x108A96: f() (a.c:11)
+   by 0x108AA2: main (a.c:14)
+Address 0x8 is not stack'd, malloc'd or (recently) free'd
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf946d88" class="outline-3">
+<h3 id="orgf946d88"><span class="section-number-3">3.4.</span> O valgrind sugere rerodar com <code>-v</code> para "counts of suppressed errors". O que fazer?</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Esses erros advém de bibliotecas, mesmo aquelas que são padrão do sistema. Neste caso, não há nada que possamos fazer e você não precisa se preocupar.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd437bbe" class="outline-3">
+<h3 id="orgd437bbe"><span class="section-number-3">3.5.</span> Se eu rodar o valgrind sem o <code>--leak-check=full</code> ele diz 'zero erro', mas quando eu rodo com ele, o valgrind diz que tem erro. E agora?</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Bom, se eu baixar o app do NuBank, tirar R$ 50.000 de empréstimo e desinstalar o app, a dívida não existe, certo? Né???
+Errado, só porque você se recusa a ver, não significa que o problema não está ali (leva essa pra tua terapia, vai).
+<b>Vazamento de memória é erro.</b> É o que faz o seu FPS do joguinho ficar lentamente caindo ao longo do tempo, é o que faz seu computador ficar lento depois de muito tempo ligado. Logo, resolva todos os vazamentos.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org02bb02a" class="outline-2">
+<h2 id="org02bb02a"><span class="section-number-2">4.</span> Fontes e outros bons materiais</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li><a href="https://valgrind.org/docs/manual/mc-manual.html">Manual do Valgrind (memcheck)</a></li>
+<li><a href="https://student.cs.uwaterloo.ca/~cs241/valgrind/">Debugging Valgrind Errors - Universidade de Waterloo</a></li>
+<li><a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1174/guide_valgrind.html">Guide to valgrind - Universidade de Stanford</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Autor: Ieremies Romero</p>
+<p class="date">Criado em: 2025-08-15 Fri 20:51</p>
+</div>
+</body>
+</html>
