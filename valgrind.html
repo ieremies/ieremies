@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt_BR" xml:lang="pt_BR">
 <head>
-<!-- 2025-08-15 Fri 20:51 -->
+<!-- 2025-08-28 Thu 09:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Valgrind</title>
@@ -202,10 +202,10 @@
 <h1 class="title">Valgrind</h1>
 <p>
 Um breve tutorial sobre a ferramenta <b>valgrind</b>.
-Falaremos sobre como <a href="#orgd198a5b">instalar</a>, quais os <a href="#orga158fd4">erros</a> mais comuns e como resolvê-los e algumas <a href="#org3520f8b">dúvidas frequentes e dicas</a>.
+Falaremos sobre como <a href="#org7a7409e">instalar</a>, quais os <a href="#org75daeaa">erros</a> mais comuns e como resolvê-los e algumas <a href="#org7ddc304">dúvidas frequentes e dicas</a>.
 </p>
-<div id="outline-container-org781840f" class="outline-2">
-<h2 id="org781840f"><span class="section-number-2">1.</span> Instalação e uso <a id="orgd198a5b"></a></h2>
+<div id="outline-container-org8d58709" class="outline-2">
+<h2 id="org8d58709"><span class="section-number-2">1.</span> Instalação e uso <a id="org7a7409e"></a></h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Antes de mais nada, você já sabe, mas não custa lembrar: <b><a href="./windows.html">não use Windows</a></b>.
@@ -221,7 +221,7 @@ No Ubuntu (ou qualquer distribuição baseada no Debian):
 </div>
 
 <p>
-<b>Para aqueles no MacOS</b>: o valgrind não funciona para computadores com processadores ARM.
+<b>Para aqueles no macOS</b>: o valgrind não funciona para computadores com processadores ARM.
 Para isso, minha sugestão é utilizar a máquina do IC via ssh e testar o seu código nela.
 Existe uma ferramenta chamada <code>leaks</code> que faz algo similar ao valgrind e é nativo do MacOS, mas não irei garantir nada em relação a ela.
 Também é possível utilizar <code>docker</code> para rodar uma máquina <code>x86</code>, mas nunca consegui fazer isso funcionar.
@@ -244,22 +244,22 @@ Em geral, para testar o seu programa, você fará:
 </div>
 
 <p>
-Perceba que não iremos passar o arquivo fonte (<code>.c</code>), e sim o binário compilado (<code>programa</code>).
+Perceba que não iremos passar o arquivo-fonte (<code>.c</code>), e sim o binário compilado (<code>programa</code>).
 A flag <code>--leak-check=full</code> será explicada mais para frente.
 </p>
 </div>
-<div id="outline-container-orgeedb487" class="outline-3">
-<h3 id="orgeedb487"><span class="section-number-3">1.1.</span> color-valgrind (<i>opcional</i>)</h3>
+<div id="outline-container-org886e725" class="outline-3">
+<h3 id="org886e725"><span class="section-number-3">1.1.</span> color-valgrind (<i>opcional</i>)</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 O valgrind é um programa bem verboso, imprime muitas informações.
 Para ficar mais fácil de ler, eu recomendo (também) o projeto <a href="https://github.com/StarlitGhost/colour-valgrind">StarlitGhost/colour-valgrind</a>.
 Após instalar utilizando o gerenciador de pacotes do python (<code>pip install colour-valgrind</code>), basta você substituir o <code>valgrind</code> por <code>colour-valgrind</code> e verá um mundo com cores.
-Este projeto já não vê manutenção à 3 anos, logo pode ser que um dia quebre. Por enquanto, parece funcionar ok.
+Este projeto já não vê manutenção há 3 anos, logo pode ser que um dia quebre. Por enquanto, parece funcionar ok.
 </p>
 
 
-<div id="orge608e4a" class="figure">
+<div id="orga75c4b2" class="figure">
 <p><img src="../colour.png" alt="colour.png" width="700px" />
 </p>
 <p><span class="figure-number">Figura 1: </span>E então ele disse "que haja cor".</p>
@@ -267,17 +267,17 @@ Este projeto já não vê manutenção à 3 anos, logo pode ser que um dia quebr
 </div>
 </div>
 </div>
-<div id="outline-container-org3c35589" class="outline-2">
-<h2 id="org3c35589"><span class="section-number-2">2.</span> Erros comuns <a id="orga158fd4"></a></h2>
+<div id="outline-container-orgac296f8" class="outline-2">
+<h2 id="orgac296f8"><span class="section-number-2">2.</span> Erros comuns <a id="org75daeaa"></a></h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Aqui vão breves descrições e exemplos para os erros mais comuns.
 Use esta página como um "dicionário": tomou o erro, não sabe o que fazer? Volte aqui para conferir as dicas.
-Alguns dos erros podem não fazer sentido agora, mas te garanto que já já você irá encontrar com eles na natureza.
+Alguns dos erros podem não fazer sentido agora, mas te garanto que já, já você irá encontrar com eles na natureza.
 </p>
 </div>
-<div id="outline-container-org6e5bfa0" class="outline-3">
-<h3 id="org6e5bfa0"><span class="section-number-3">2.1.</span> Invalid read, invalid write</h3>
+<div id="outline-container-org98de1fd" class="outline-3">
+<h3 id="org98de1fd"><span class="section-number-3">2.1.</span> Invalid read, invalid write</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Este erro acontece quando o seu programa tenta ler ou escrever onde não deveria.
@@ -357,8 +357,8 @@ Caso queira, adicionar a flag <code>--read-var-info=yes</code> ao valgrind pode 
 </p>
 </div>
 </div>
-<div id="outline-container-org0aaa6b9" class="outline-3">
-<h3 id="org0aaa6b9"><span class="section-number-3">2.2.</span> Uninitialised value</h3>
+<div id="outline-container-orgafd94f1" class="outline-3">
+<h3 id="orgafd94f1"><span class="section-number-3">2.2.</span> Uninitialised value</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Este erro costuma aparecer de duas formas <code>conditional jump or move depends on uninitialised values(s)</code> ou <code>use of unintialised value</code>.
@@ -403,7 +403,7 @@ Este erro costuma aparecer de duas formas <code>conditional jump or move depends
 
 <p>
 Esse costuma ser o principal responsável pelo temido <b>"na minha máquina funciona"</b>.
-Nossos computadores pessoais são reinicializados com frequência, o que faz com que a maior parte do lixo de memória esteja zerado.
+Nossos computadores pessoais são reinicializados com frequência, o que faz com que a maioria do lixo de memória esteja zerado.
 Já os servidores — ou as "máquinas de produção" — costumam permanecer ligados por longos períodos, acumulando lixos de memória ao longo de várias execuções.
 No fim das contas, seu programa passa a depender do horóscopo do dia: se Vênus estiver alinhado com Marte, ele roda direito; caso contrário…
 </p>
@@ -413,8 +413,8 @@ Caso queira, adicionar a flag <code>--track-origins=yes</code> ao valgrind fará
 </p>
 </div>
 </div>
-<div id="outline-container-org8ddfb0d" class="outline-3">
-<h3 id="org8ddfb0d"><span class="section-number-3">2.3.</span> Invalid free</h3>
+<div id="outline-container-org1a68196" class="outline-3">
+<h3 id="org1a68196"><span class="section-number-3">2.3.</span> Invalid free</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Existem duas formas de tomar esse erro: ou você está liberando uma variável que não é dinamicamente alocada (memória no <i>heap</i>) ou você está liberando a memória duas vezes.
@@ -478,8 +478,8 @@ Logo, ponteiros que apontam para <code>NULL</code> são, necessariamente, invál
 </p>
 </div>
 </div>
-<div id="outline-container-org39e117a" class="outline-3">
-<h3 id="org39e117a"><span class="section-number-3">2.4.</span> Memory leak</h3>
+<div id="outline-container-org52af415" class="outline-3">
+<h3 id="org52af415"><span class="section-number-3">2.4.</span> Memory leak</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Os famosos, vazamentos de memória: quando não liberamos a memória ao final do programa.
@@ -506,8 +506,8 @@ Muitas vezes, isso te ajuda a perceber quem são as variáveis que estão vazand
 Os tipos de vazamento são:
 </p>
 <ul class="org-ul">
-<li><code>definitely lost</code> : significa que, em algum momento, você perdeu o ponteiro para aquele bloco, seja porque sobrescreveu o valor dele ou porque ele ficou pra trás em alguma chamada de função. Lembre-se de liberar o endereço de memória toda vez que for apagá-lo ou deixá-lo pra trás.</li>
-<li><code>indirectly lost</code> : digamos que você tem uma <code>struct</code> que dentro dela há um ponteiro. Se você perder o ponteiro para sua <code>struct</code>, você indiretamente perde o ponteiro que estava dentro dela e, consequentemente, perde indiretamente o endereço de memória que este cara apontava. Confira se você está liberando os ponteiros dentro de registros antes de liberá-los.</li>
+<li><code>definitely lost</code> : significa que, em algum momento, você perdeu o ponteiro para aquele bloco, seja por sobrescrever o valor dele ou porque ele ficou para trás em alguma chamada de função. Lembre-se de liberar o endereço de memória toda vez que for apagá-lo ou deixá-lo para trás.</li>
+<li><code>indirectly lost</code> : digamos que você tem uma <code>struct</code> que dentro dela há um ponteiro. Se você perder o ponteiro para sua <code>struct</code>, você perde indiretamente o ponteiro que estava dentro dela e, consequentemente, perde indiretamente o endereço de memória que este cara apontava. Confira se você está liberando os ponteiros em registros antes de liberá-los.</li>
 <li><code>possibly lost</code> : esse é o mais complicado: se você possui um vetor (dinamicamente alocado) e você move esse ponteiro para o interior do vetor. No nosso caso, a causa mais comum são strings da biblioteca <code>string.h</code>.</li>
 <li><code>still reachable</code> : significa que você deixou de liberar alguns blocos, mas você ainda possui o endereço deles (ao final da execução do programa).</li>
 </ul>
@@ -518,25 +518,25 @@ Para que o valgrind fale tudo que ele sabe sobre esses vazamentos, é necessári
 </div>
 </div>
 </div>
-<div id="outline-container-org8eae6b6" class="outline-2">
-<h2 id="org8eae6b6"><span class="section-number-2">3.</span> Perguntas comuns e dicas <a id="org3520f8b"></a></h2>
+<div id="outline-container-orgf3a1e0e" class="outline-2">
+<h2 id="orgf3a1e0e"><span class="section-number-2">3.</span> Perguntas comuns e dicas <a id="org7ddc304"></a></h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgbd2dab9" class="outline-3">
-<h3 id="orgbd2dab9"><span class="section-number-3">3.1.</span> Ignore tudo menos o primeiro erro</h3>
+<div id="outline-container-orge8ff026" class="outline-3">
+<h3 id="orge8ff026"><span class="section-number-3">3.1.</span> Ignore tudo menos o primeiro erro</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Pela natureza dos erros que o valgrind busca, é comum a lista de erros ser gigante, muitas vezes contendo milhares de entradas.
-Isso não significa que seu código possui milhares de erros: por exemplo, um código com um pequeno erro dentro de um laço que se repete 1000 vezes, terá 1000 erros do valgrind, por mais que você só precise corrigir uma linha.
+Isso não significa que seu código possui milhares de erros: por exemplo, um código com um pequeno erro em um laço que se repete 1000 vezes, terá 1000 erros do valgrind, por mais que você só precise corrigir uma linha.
 </p>
 
 <p>
-Além disso, é muito comum que um erro de memória leve a outro erro de memória, um efeito de cascata. Por isso, quando tiver com problemas no valgrind, <b>foque em resolver apenas o primeiro dos erros</b> e repita o processo até que tudo esteja resolvido. Em hipótese alguma se importe com a "quantidade" de erros que o valgrind diz que existe. Ele só sabe fazer drama!
+Além disso, é muito comum que um erro de memória leve a outro erro de memória, um efeito de cascata. Por isso, quando tiver com problemas no valgrind, <b>foque em resolver somente o primeiro dos erros</b> e repita o processo até que tudo esteja resolvido. Em hipótese alguma se importe com a "quantidade" de erros que o valgrind diz que existe. Ele só sabe fazer drama!
 </p>
 </div>
 </div>
-<div id="outline-container-org8c84aa8" class="outline-3">
-<h3 id="org8c84aa8"><span class="section-number-3">3.2.</span> Mas nunca ignore se houver erro</h3>
+<div id="outline-container-org4de6c9d" class="outline-3">
+<h3 id="org4de6c9d"><span class="section-number-3">3.2.</span> Mas nunca ignore se houver erro</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 <i>Ah, tudo roda normal, mas o valgrind reclama de erro, vou só ignorar&#x2026;</i> <b>NÃO!</b>
@@ -544,8 +544,8 @@ Além disso, é muito comum que um erro de memória leve a outro erro de memóri
 
 <p>
 Sabe o que é pior do que um código errado? Um código com comportamento indefinido!
-Quando o valgrind te diz que tem algo errado, mesmo que o seu <i>output</i> não esteja errado, existe a chance de seu programa se comportar de forma estranha quando rodar em outra máquina ou até mesmo na sua mais tarde.
-Você vai realmente querer publicar um site ou aplicativo que tem chance de quebrar na máquina do cliente??? Foi o que pensei.
+Quando o valgrind te diz que tem algo errado, mesmo que o seu <i>output</i> não esteja errado, existe a chance de seu programa se comportar estranhamente quando rodar em outra máquina ou até mesmo na sua mais tarde.
+Você vai realmente querer publicar um site ou aplicativo com chance de quebrar na máquina do cliente??? Foi o que pensei.
 </p>
 
 <p>
@@ -554,8 +554,8 @@ Isso sempre resolve os problemas de "ah, mas roda na minha máquina" e é por is
 </p>
 </div>
 </div>
-<div id="outline-container-org369a8b7" class="outline-3">
-<h3 id="org369a8b7"><span class="section-number-3">3.3.</span> Procure o ponto da pilha que o seu programa aparece</h3>
+<div id="outline-container-org71c0973" class="outline-3">
+<h3 id="org71c0973"><span class="section-number-3">3.3.</span> Procure o ponto da pilha que o seu programa aparece</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Conforme nossos programas começam a utilizar bibliotecas padrões, uma simples chamada de função no nosso código pode gerar diversas chamadas no código da biblioteca.
@@ -582,27 +582,27 @@ Address 0x8 is not stack'd, malloc'd or (recently) free'd
 </div>
 </div>
 </div>
-<div id="outline-container-orgf946d88" class="outline-3">
-<h3 id="orgf946d88"><span class="section-number-3">3.4.</span> O valgrind sugere rerodar com <code>-v</code> para "counts of suppressed errors". O que fazer?</h3>
+<div id="outline-container-org1a1b9f0" class="outline-3">
+<h3 id="org1a1b9f0"><span class="section-number-3">3.4.</span> O valgrind sugere rerodar com <code>-v</code> para "counts of suppressed errors". O que fazer?</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-Esses erros advém de bibliotecas, mesmo aquelas que são padrão do sistema. Neste caso, não há nada que possamos fazer e você não precisa se preocupar.
+Esses erros advêm de bibliotecas, mesmo aquelas que são padrão do sistema. Neste caso, não há nada que possamos fazer e você não precisa se preocupar.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd437bbe" class="outline-3">
-<h3 id="orgd437bbe"><span class="section-number-3">3.5.</span> Se eu rodar o valgrind sem o <code>--leak-check=full</code> ele diz 'zero erro', mas quando eu rodo com ele, o valgrind diz que tem erro. E agora?</h3>
+<div id="outline-container-org69f4f82" class="outline-3">
+<h3 id="org69f4f82"><span class="section-number-3">3.5.</span> Se eu rodar o valgrind sem o <code>--leak-check=full</code> ele diz 'zero erro', mas quando rodo com ele, o valgrind diz que tem erro. E agora?</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Bom, se eu baixar o app do NuBank, tirar R$ 50.000 de empréstimo e desinstalar o app, a dívida não existe, certo? Né???
-Errado, só porque você se recusa a ver, não significa que o problema não está ali (leva essa pra tua terapia, vai).
+Errado, só porque você se recusa a ver, não significa que o problema não está ali (leva essa para tua terapia, vai).
 <b>Vazamento de memória é erro.</b> É o que faz o seu FPS do joguinho ficar lentamente caindo ao longo do tempo, é o que faz seu computador ficar lento depois de muito tempo ligado. Logo, resolva todos os vazamentos.
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org02bb02a" class="outline-2">
-<h2 id="org02bb02a"><span class="section-number-2">4.</span> Fontes e outros bons materiais</h2>
+<div id="outline-container-org02d9b62" class="outline-2">
+<h2 id="org02d9b62"><span class="section-number-2">4.</span> Fontes e outros bons materiais</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li><a href="https://valgrind.org/docs/manual/mc-manual.html">Manual do Valgrind (memcheck)</a></li>
@@ -614,7 +614,7 @@ Errado, só porque você se recusa a ver, não significa que o problema não est
 </div>
 <div id="postamble" class="status">
 <p class="author">Autor: Ieremies Romero</p>
-<p class="date">Criado em: 2025-08-15 Fri 20:51</p>
+<p class="date">Criado em: 2025-08-28 Thu 09:36</p>
 </div>
 </body>
 </html>
