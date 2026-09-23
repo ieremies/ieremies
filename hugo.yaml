@@ -1,0 +1,64 @@
+baseURL: https://ieremies.dev/
+title: ieremies
+theme: hextra
+enableRobotsTXT: true
+
+params:
+  description: Ieremies Romero — PhD candidate in Computer Science at UNICAMP
+
+# markup:
+#   # allow raw html
+#   goldmark:
+#     renderer:
+#       unsafe: true
+
+#   # enable hextra syntax highlight
+#   highlight:
+#     noClasses: false
+
+menu:
+  main:
+    - identifier: about
+      name: About
+      pageRef: /about
+      weight: 1
+    - identifier: education
+      name: Education
+      pageRef: /education
+      weight: 2
+    - identifier: experience
+      name: Experience
+      pageRef: /experience
+      weight: 3
+    - identifier: publications
+      name: Publications
+      pageRef: /publications
+      weight: 4
+    - identifier: service
+      name: Service
+      pageRef: /service
+      weight: 5
+    - identifier: awards
+      name: Awards
+      pageRef: /awards
+      weight: 6
+
+params:
+  navbar:
+    displayTitle: true
+    displayLogo: true
+    logo:
+        path: images/logo.png
+        dark: images/logo-dark.png
+        link: /
+
+  footer:
+    displayCopyright: false
+    displayPoweredBy: false
+
+  editURL:
+    enable: false
+
+  page:
+    tabs:
+      sync: true
