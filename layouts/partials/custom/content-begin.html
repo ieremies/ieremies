@@ -1,7 +1,7 @@
 {{- /* Animated graph background for the home page (D3 force simulation). */ -}}
 {{- if .IsHome -}}
 <canvas id="home-graph" aria-hidden="true"
-  style="position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .55;"></canvas>
+  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: .55;"></canvas>
 <style>
   /* lift page content above the fixed canvas */
   main#content { position: relative; z-index: 1; }
@@ -19,9 +19,16 @@
     dark:  { node: "160,217,255", edge: "100,116,139" },
     light: { node: "30,64,175",   edge: "100,116,139" },
   };
+  // cover-slide pastel node fills (graph coloring motif)
+  const pastels = ["248,206,204", "255,242,204", "218,232,252", "214,232,212"];
 
-  const N = 50, P = 0.06; // Erdős–Rényi G(N, P)
-  const nodes = Array.from({ length: N }, (_, i) => ({ id: i, r: 2.5 + 4.5 * Math.random() }));
+  // node count scales with viewport so the graph fills the screen
+  const N = Math.max(40, Math.min(160, Math.round(innerWidth * innerHeight / 18000)));
+  const P = 0.02; // Erdős–Rényi G(N, P) — edge probability
+  const nodes = Array.from({ length: N }, (_, i) => {
+    const hx = Math.random() * innerWidth, hy = Math.random() * innerHeight;
+    return { id: i, r: 2.5 + 4.5 * Math.random(), hx, hy, x: hx, y: hy }; // hx/hy = home zone
+  });
   const links = [];
   for (let i = 0; i < N; i++)
     for (let j = i + 1; j < N; j++)
@@ -31,7 +38,37 @@
     .force("link", d3.forceLink(links).id(d => d.id).distance(90).strength(0.4))
     .force("charge", d3.forceManyBody().strength(-320))
     .force("collide", d3.forceCollide(14))
-    .force("center", d3.forceCenter(innerWidth / 2, innerHeight / 2));
+    .force("x", d3.forceX(d => d.hx).strength(0.08)) // weak pull to own home zone
+    .force("y", d3.forceY(d => d.hy).strength(0.08)); // no center force: homes spread the graph
+
+  // soft preference: nudge nodes away from text zones (not a hard exclusion)
+  const TEXT_REPEL_R = 70, TEXT_REPEL_FORCE = 1.2;
+  sim.force("textRepel", alpha => {
+    const zones = textZones();
+    for (const n of nodes) {
+      for (const r of zones) {
+        const edge = n.r + 6; // keep nodes clear of the text, not just the rect edge
+        const cx = Math.max(r.left - edge, Math.min(n.x, r.right + edge));
+        const cy = Math.max(r.top - edge, Math.min(n.y, r.bottom + edge));
+        const dx = n.x - cx, dy = n.y - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist >= TEXT_REPEL_R) continue;
+        const push = (1 - dist / TEXT_REPEL_R) * TEXT_REPEL_FORCE * alpha;
+        if (dist < 1e-6) {
+          // node inside the zone: push out along the nearest edge
+          const dL = n.x - (r.left - edge), dR = r.right + edge - n.x;
+          const dT = n.y - (r.top - edge), dB = r.bottom + edge - n.y;
+          const m = Math.min(dL, dR, dT, dB);
+          if (m === dL) n.vx -= push; else if (m === dR) n.vx += push;
+          else if (m === dT) n.vy -= push; else n.vy += push;
+        } else {
+          n.vx += dx / dist * push;
+          n.vy += dy / dist * push;
+        }
+      }
+    }
+  })
+  .alphaTarget(0.02); // perpetual gentle motion; remove for settle-down
 
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -40,10 +77,13 @@
     canvas.style.width = innerWidth + "px";
     canvas.style.height = innerHeight + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // re-home nodes so the graph fills the new viewport, then re-warm the sim
+    for (const n of nodes) { n.hx = Math.random() * innerWidth; n.hy = Math.random() * innerHeight; }
+    if (!reduced) sim.alpha(0.4).restart();
     if (reduced) draw(0);
   }
 
-  const FADE_R = 60, FADE_PAD = 24, FADE_MIN = 0.15;
+  const FADE_R = 60, FADE_PAD = 24, FADE_MIN = 0.35;
   // viewport-relative boxes of text-bearing elements; live per frame (scroll-safe)
   const textZones = () =>
     [...document.querySelectorAll("main#content h1, main#content h2, main#content h3, main#content p, main#content a")]
@@ -67,15 +107,33 @@
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     ctx.lineWidth = 1;
     for (const l of links) {
-      const a = proximity(l.source.x, l.source.y, zones) * proximity(l.target.x, l.target.y, zones);
-      ctx.strokeStyle = `rgba(${p.edge},${a * (0.22 + 0.18 * Math.abs(Math.sin(elapsed * 0.001 + l.index)))})`;
+      const a = (proximity(l.source.x, l.source.y, zones) + proximity(l.target.x, l.target.y, zones)) / 2;
+      ctx.strokeStyle = `rgba(${p.edge},${0.15 + a * 0.55})`;
+      ctx.lineWidth = 1 + a * 2;
+      // shorten both ends by node radius + gap so edges don't touch the nodes
+      const dx = l.target.x - l.source.x, dy = l.target.y - l.source.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const cut0 = l.source.r + 3, cut1 = l.target.r + 3;
       ctx.beginPath();
-      ctx.moveTo(l.source.x, l.source.y);
-      ctx.lineTo(l.target.x, l.target.y);
+      ctx.moveTo(l.source.x + dx / dist * cut0, l.source.y + dy / dist * cut0);
+      ctx.lineTo(l.target.x - dx / dist * cut1, l.target.y - dy / dist * cut1);
       ctx.stroke();
     }
     for (const n of nodes) {
-      ctx.fillStyle = `rgba(${p.node},${0.9 * proximity(n.x, n.y, zones)})`;
+      const k = proximity(n.x, n.y, zones);
+      if (isDark()) {
+        ctx.fillStyle = `rgba(${p.node},${0.9 * k})`;
+      } else {
+        // cover-style coloring: pastel fill + dark rim
+        ctx.fillStyle = `rgba(${pastels[n.id % pastels.length]},${0.85 * k})`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = `rgba(34,55,58,${k})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        continue;
+      }
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
       ctx.fill();
