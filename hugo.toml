@@ -1,0 +1,4 @@
+baseURL = "https://ieremies.dev/"
+title = "ieremies"
+theme = "hextra"
+enableRobotsTXT = true
