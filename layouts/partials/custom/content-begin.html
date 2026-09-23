@@ -79,7 +79,7 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // re-home nodes so the graph fills the new viewport, then re-warm the sim
     for (const n of nodes) { n.hx = Math.random() * innerWidth; n.hy = Math.random() * innerHeight; }
-    if (!reduced) sim.alpha(0.4).restart();
+    if (!reduced) sim.alpha(0.15).restart();
     if (reduced) draw(0);
   }
 
@@ -145,12 +145,15 @@
   addEventListener("resize", resize);
 
   resize();
+  // pre-warm the simulation to (near) equilibrium before first paint,
+  // so the page opens without a violent node-sprint
+  sim.stop();
+  for (let i = 0; i < 300 && sim.alpha() > 1e-4; i++) sim.tick();
+  draw(0);
   if (reduced) {
-    // static layout: settle the simulation, draw once
-    sim.stop();
-    for (let i = 0; i < 300 && sim.alpha() > 1e-4; i++) sim.tick();
-    draw(0);
+    // static layout: already settled above
   } else {
+    sim.alpha(0.05).restart(); // warm but gentle drift from equilibrium
     sim.on("tick", draw);
   }
 })();
