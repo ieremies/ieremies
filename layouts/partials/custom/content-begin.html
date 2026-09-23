@@ -1,0 +1,100 @@
+{{- /* Animated graph background for the home page (D3 force simulation). */ -}}
+{{- if .IsHome -}}
+<canvas id="home-graph" aria-hidden="true"
+  style="position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .55;"></canvas>
+<style>
+  /* lift page content above the fixed canvas */
+  main#content { position: relative; z-index: 1; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+(() => {
+  const canvas = document.getElementById("home-graph");
+  if (!canvas || !window.d3) return;
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const isDark = () => document.documentElement.classList.contains("dark");
+  const palette = {
+    dark:  { node: "160,217,255", edge: "100,116,139" },
+    light: { node: "30,64,175",   edge: "100,116,139" },
+  };
+
+  const N = 50, P = 0.06; // Erdős–Rényi G(N, P)
+  const nodes = Array.from({ length: N }, (_, i) => ({ id: i, r: 2.5 + 4.5 * Math.random() }));
+  const links = [];
+  for (let i = 0; i < N; i++)
+    for (let j = i + 1; j < N; j++)
+      if (Math.random() < P) links.push({ source: i, target: j });
+
+  const sim = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(90).strength(0.4))
+    .force("charge", d3.forceManyBody().strength(-320))
+    .force("collide", d3.forceCollide(14))
+    .force("center", d3.forceCenter(innerWidth / 2, innerHeight / 2));
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = innerWidth * dpr;
+    canvas.height = innerHeight * dpr;
+    canvas.style.width = innerWidth + "px";
+    canvas.style.height = innerHeight + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduced) draw(0);
+  }
+
+  const FADE_R = 60, FADE_PAD = 24, FADE_MIN = 0.15;
+  // viewport-relative boxes of text-bearing elements; live per frame (scroll-safe)
+  const textZones = () =>
+    [...document.querySelectorAll("main#content h1, main#content h2, main#content h3, main#content p, main#content a")]
+      .map(el => el.getBoundingClientRect())
+      .filter(r => r.width && r.height);
+
+  // 1 inside/near a zone, FADE_MIN far from all zones
+  function proximity(x, y, zones) {
+    let d = Infinity;
+    for (const r of zones) {
+      const dx = Math.max(r.left - FADE_PAD - x, 0, x - (r.right + FADE_PAD));
+      const dy = Math.max(r.top - FADE_PAD - y, 0, y - (r.bottom + FADE_PAD));
+      d = Math.min(d, Math.hypot(dx, dy));
+    }
+    return Math.max(FADE_MIN, Math.min(1, d / FADE_R));
+  }
+
+  function draw(elapsed) {
+    const p = palette[isDark() ? "dark" : "light"];
+    const zones = textZones();
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.lineWidth = 1;
+    for (const l of links) {
+      const a = proximity(l.source.x, l.source.y, zones) * proximity(l.target.x, l.target.y, zones);
+      ctx.strokeStyle = `rgba(${p.edge},${a * (0.22 + 0.18 * Math.abs(Math.sin(elapsed * 0.001 + l.index)))})`;
+      ctx.beginPath();
+      ctx.moveTo(l.source.x, l.source.y);
+      ctx.lineTo(l.target.x, l.target.y);
+      ctx.stroke();
+    }
+    for (const n of nodes) {
+      ctx.fillStyle = `rgba(${p.node},${0.9 * proximity(n.x, n.y, zones)})`;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  new MutationObserver(() => draw(sim.alpha()))
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  addEventListener("resize", resize);
+
+  resize();
+  if (reduced) {
+    // static layout: settle the simulation, draw once
+    sim.stop();
+    for (let i = 0; i < 300 && sim.alpha() > 1e-4; i++) sim.tick();
+    draw(0);
+  } else {
+    sim.on("tick", draw);
+  }
+})();
+</script>
+{{- end -}}
