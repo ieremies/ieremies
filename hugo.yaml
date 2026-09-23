@@ -3,9 +3,6 @@ title: ieremies
 theme: hextra
 enableRobotsTXT: true
 
-params:
-  description: Ieremies Romero — PhD candidate in Computer Science at UNICAMP
-
 # markup:
 #   # allow raw html
 #   goldmark:
@@ -44,6 +41,7 @@ menu:
       weight: 6
 
 params:
+  description: Ieremies Romero — PhD candidate in Computer Science at UNICAMP
   navbar:
     displayTitle: true
     displayLogo: true
