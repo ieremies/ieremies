@@ -5,8 +5,10 @@ type: "docs"
 toc: true
 ---
 
+{{< callout type="important" >}} 
 This a rather long tutorial. Some parts of it you might already know, so
 feel free to use the table of contents to skip a head.
+{{< /callout >}}
 
 ## Access (`ssh`)
 
